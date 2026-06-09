@@ -17,13 +17,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
 
-  // Forgot password states
-  const [isForgotPassword, setIsForgotPassword] = useState(false)
-  const [forgotEmail, setForgotEmail] = useState('')
-  const [forgotLoading, setForgotLoading] = useState(false)
-  const [forgotSuccess, setForgotSuccess] = useState(false)
-  const [forgotError, setForgotError] = useState('')
-
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setIsLoading(true)
@@ -39,26 +32,6 @@ export default function LoginPage() {
       setIsLoading(false)
     } else {
       router.push('/') // ke dashboard nanti
-    }
-  }
-
-  async function handleForgotPassword(e: React.FormEvent) {
-    e.preventDefault()
-    setForgotLoading(true)
-    setForgotError('')
-    setForgotSuccess(false)
-
-    // Tautan reset password akan mengarahkan ke URL /auth/callback?next=/reset-password
-    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
-    })
-
-    if (error) {
-      setForgotError(error.message)
-      setForgotLoading(false)
-    } else {
-      setForgotSuccess(true)
-      setForgotLoading(false)
     }
   }
 
@@ -83,173 +56,82 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {!isForgotPassword ? (
-            <>
-              <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h1>
-                <p className="text-gray-500 dark:text-slate-400 text-sm">Sign in to your SmartCash account</p>
-              </div>
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h1>
+            <p className="text-gray-500 dark:text-slate-400 text-sm">Sign in to your SmartCash account</p>
+          </div>
 
-              {errorMsg && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="bg-red-50 dark:bg-red-950/20 text-red-500 dark:text-red-400 p-3 rounded-lg text-sm mb-6 text-center border border-red-100 dark:border-red-950/30"
-                >
-                  {errorMsg}
-                </motion.div>
-              )}
-
-              <form onSubmit={handleLogin} className="space-y-5">
-                <div>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail className="h-5 w-5 text-gray-400 dark:text-slate-500" />
-                    </div>
-                    <input
-                      type="email"
-                      placeholder="Email address"
-                      required
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-slate-700/80 rounded-xl text-gray-900 dark:text-slate-100 bg-white dark:bg-[#1b2336] placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock className="h-5 w-5 text-gray-400 dark:text-slate-500" />
-                    </div>
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Password"
-                      required
-                      className="block w-full pl-10 pr-10 py-3 border border-gray-200 dark:border-slate-700/80 rounded-xl text-gray-900 dark:text-slate-100 bg-white dark:bg-[#1b2336] placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none cursor-pointer"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-5 w-5" />
-                        ) : (
-                          <Eye className="h-5 w-5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end text-sm">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsForgotPassword(true)
-                      setErrorMsg('')
-                    }}
-                    className="font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors cursor-pointer"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors disabled:opacity-70 cursor-pointer"
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <>
-                      Sign In
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
-            </>
-          ) : (
-            <>
-              <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Forgot Password</h1>
-                <p className="text-gray-500 dark:text-slate-400 text-sm">Enter your email to receive a password reset link</p>
-              </div>
-
-              {forgotError && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="bg-red-50 dark:bg-red-950/20 text-red-500 dark:text-red-400 p-3 rounded-lg text-sm mb-6 text-center border border-red-100 dark:border-red-950/30"
-                >
-                  {forgotError}
-                </motion.div>
-              )}
-
-              {forgotSuccess && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 p-3 rounded-lg text-sm mb-6 text-center border border-green-100 dark:border-green-950/30"
-                >
-                  Link reset password telah dikirim ke email Anda! Silakan cek inbox Anda.
-                </motion.div>
-              )}
-
-              <form onSubmit={handleForgotPassword} className="space-y-5">
-                <div>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail className="h-5 w-5 text-gray-400 dark:text-slate-500" />
-                    </div>
-                    <input
-                      type="email"
-                      placeholder="Email address"
-                      required
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-slate-700/80 rounded-xl text-gray-900 dark:text-slate-100 bg-white dark:bg-[#1b2336] placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-                      value={forgotEmail}
-                      onChange={(e) => setForgotEmail(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={forgotLoading}
-                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors disabled:opacity-70 cursor-pointer"
-                >
-                  {forgotLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <>
-                      Send Reset Link
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </>
-                  )}
-                </button>
-
-                <div className="text-center pt-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsForgotPassword(false)
-                      setForgotError('')
-                      setForgotSuccess(false)
-                    }}
-                    className="font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors cursor-pointer"
-                  >
-                    Back to Sign In
-                  </button>
-                </div>
-              </form>
-            </>
+          {errorMsg && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="bg-red-50 dark:bg-red-950/20 text-red-500 dark:text-red-400 p-3 rounded-lg text-sm mb-6 text-center border border-red-100 dark:border-red-950/30"
+            >
+              {errorMsg}
+            </motion.div>
           )}
+
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400 dark:text-slate-500" />
+                </div>
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  required
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-slate-700/80 rounded-xl text-gray-900 dark:text-slate-100 bg-white dark:bg-[#1b2336] placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400 dark:text-slate-500" />
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  required
+                  className="block w-full pl-10 pr-10 py-3 border border-gray-200 dark:border-slate-700/80 rounded-xl text-gray-900 dark:text-slate-100 bg-white dark:bg-[#1b2336] placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none cursor-pointer"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors disabled:opacity-70 cursor-pointer"
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <>
+                  Sign In
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
 
           <p className="mt-8 text-center text-sm text-gray-600 dark:text-slate-400">
             Don't have an account?{' '}
