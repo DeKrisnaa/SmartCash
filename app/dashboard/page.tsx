@@ -1,6 +1,7 @@
 'use client'
  
 import { useEffect, useState } from 'react'
+import type { User } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
@@ -11,7 +12,7 @@ import { ArrowRight, Calculator, ArrowRightLeft, PiggyBank, LayoutDashboard } fr
 export default function DashboardPage() {
   const supabase = createClient()
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
  
   useEffect(() => {

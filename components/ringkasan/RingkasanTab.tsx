@@ -476,7 +476,7 @@ export default function RingkasanTab({
         <div className="space-y-2 text-center md:text-left relative z-10">
           <h4 className="text-xl font-bold">Asisten Finansial Cerdas</h4>
           <p className="text-sm text-indigo-100 dark:text-indigo-200 max-w-xl leading-relaxed">
-            SmartCash membantu Anda melacak budget harian secara instan. Buka tab **Budget Anda** untuk mengonfigurasi batas anggaran harian Anda, mencatat pengeluaran di tab **Transaksi**, dan mentransfer sisa uang harian ke **Tabungan**!
+            SmartCash membantu Anda melacak budget harian secara instan. Buka tab "Budget Anda" untuk mengonfigurasi batas anggaran harian Anda, mencatat pengeluaran di tab "Transaksi", dan mentransfer sisa uang harian ke "Tabungan"!
           </p>
         </div>
         <button
